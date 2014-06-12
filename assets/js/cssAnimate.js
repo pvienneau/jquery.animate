@@ -16,9 +16,7 @@ if(window.jQuery){
 		return false;
 	}
 	
-	$.fn.jQuery = {
-		animate: $.fn.animate
-	}
+	$.fn.jQueryAnimate = $.fn.animate;
 	
 	$.fn.animate = function(properties, speed, easing, callback){
 		
