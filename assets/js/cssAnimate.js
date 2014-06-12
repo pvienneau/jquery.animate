@@ -17,6 +17,17 @@ if(window.jQuery){
 		return false;
 	}
 	
+	$.fn.vendorCss = function(properties){
+		if(typeof properties === 'undefined') return false;
+		var $this = this;
+		
+		for(key in properties){
+			$this.css($.support.cssProperty(key), properties[key]);
+		}
+		
+		return true;
+	}
+	
 	$.fn.jQueryAnimate = $.fn.animate;
 	$.fn.animate = function(properties, speed, easing, callback){
 		
@@ -95,23 +106,11 @@ if(window.jQuery){
 
 			//transition complete
 			setTimeout(function(){
-				$this.css({
-					'transition-property': 'none',  
-					'transition-duration': '',
-				 	'transition-timing-function': '',
-					'-webkit-transition-property': 'none',  
-					'-webkit-transition-duration': '',  
-					'-webkit-transition-timing-function': '',
-					'-moz-transition-property': 'none',  
-					'-moz-transition-duration': '',  
-				 	'-moz-transition-timing-function': '',
-					'-o-transition-property': 'none',  
-					'-o-transition-duration': '',  
-				 	'-o-transition-timing-function': '',
-					'-ms-transition-property': 'none',  
-					'-ms-transition-duration': '',  
-				 	'-ms-transition-timing-function': ''
-				});
+				// $this.vendorCss({
+				// 					'transition-property': 'none',
+				// 					'transition-duration': '',
+				// 					'transition-timing-function': ''
+				// 				});
 
 				if(callback) callback.apply(self[0]);
 			}, speed);
@@ -133,22 +132,10 @@ if(window.jQuery){
 			_property_string = $.trim(_property_string).replace(/,+$/,'');
 			
 			//apply css transitions
-			$this.css({
-				'transition-property': '-webkit-transform',  
+			$this.vendorCss({
+				'transition-property': _property_string,  
 				'transition-duration': speed + 'ms',
-				'transition-timing-function': easing.css,
-				'-webkit-transition-property': _property_string,
-				'-webkit-transition-duration': speed + 'ms',
-				'-webkit-transition-timing-function': easing.css,
-				'-moz-transition-property': _property_string,
-				'-moz-transition-duration': speed + 'ms',
-				'-moz-transition-timing-function': easing.css,
-				'-o-transition-property': _property_string,
-				'-o-transition-duration': speed + 'ms',
-				'-o-transition-timing-function': easing.css,
-				'-ms-transition-property': _property_string,
-				'-ms-transition-duration': speed + 'ms',
-				'-ms-transition-timing-function': easing.css
+				'transition-timing-function': easing.css
 			});
 
 			//apply new styles
