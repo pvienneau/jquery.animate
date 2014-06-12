@@ -2,5 +2,4 @@
 *
 # But not these files...
 !.gitignore
-!cssAnimate.js
-# etc...
+!cssAnimate.*
