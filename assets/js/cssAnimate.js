@@ -22,7 +22,7 @@ if(window.jQuery){
 		
 		//associative array linking jQuery easing to css easing (for unsupported css3 easings, default to simple easing)
 		//from: http://easings.net/
-		var _easing_assoc_lib = {
+		var _easingJQueryCss = {
 			'linear': 'linear',
 			'swing': 'ease',
 			'easeInQuad': 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
@@ -56,6 +56,14 @@ if(window.jQuery){
 			'easeOutBounce': 'ease-out',
 			'easeInOutBounce': 'ease-in-out'
 		}
+		
+		var _easingCssJQuery = {
+			'ease': 'swing',
+			'linear': 'linear',
+			'ease-in': 'easeInCubic',
+			'ease-out': 'easeOutCubic',
+			'ease-in-out': 'easeInOutCubic'
+		}
 
 		//default values
 		if(typeof properties === 'undefined') return false;
@@ -63,6 +71,23 @@ if(window.jQuery){
 		easing = easing || 'swing';
 		callback = callback || false;
 		var $this = $(this);
+		
+		if(typeof _easingJQueryCss[easing] !== 'undefined'){
+			easing = {
+				css: _easingJQueryCss[easing],
+				jQuery: easing
+			}
+		}else if(typeof _easingCssJQuery[easing] !== 'undefined'){
+			easing = {
+				css: easing,
+				jQuery: _easingCssJQuery[easing]
+			}
+		}else{
+			easing = {
+				css: _easingJQueryCss['swing'],
+				jQuery: 'swing'
+			}
+		}
 
 		if($.support.cssProperty('transition')){
 
@@ -104,19 +129,19 @@ if(window.jQuery){
 			$this.css({
 				'transition-property': '-webkit-transform',  
 				'transition-duration': speed + 'ms',
-				'transition-timing-function': easing,
+				'transition-timing-function': easing.css,
 				'-webkit-transition-property': _property_string,
 				'-webkit-transition-duration': speed + 'ms',
-				'-webkit-transition-timing-function': easing,
+				'-webkit-transition-timing-function': easing.css,
 				'-moz-transition-property': _property_string,
 				'-moz-transition-duration': speed + 'ms',
-				'-moz-transition-timing-function': easing,
+				'-moz-transition-timing-function': easing.css,
 				'-o-transition-property': _property_string,
 				'-o-transition-duration': speed + 'ms',
-				'-o-transition-timing-function': easing,
+				'-o-transition-timing-function': easing.css,
 				'-ms-transition-property': _property_string,
 				'-ms-transition-duration': speed + 'ms',
-				'-ms-transition-timing-function': easing
+				'-ms-transition-timing-function': easing.css
 			});
 
 			setTimeout(function(){
@@ -126,7 +151,7 @@ if(window.jQuery){
 			});
 
 		}else{
-			$this.animate(properties, speed, easing, callback);			
+			$this.animate(properties, speed, easing.jQuery, callback);			
 		}
 	}
 }else{
