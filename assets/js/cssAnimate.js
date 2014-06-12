@@ -106,11 +106,11 @@ if(window.jQuery){
 
 			//transition complete
 			setTimeout(function(){
-				// $this.vendorCss({
-				// 					'transition-property': 'none',
-				// 					'transition-duration': '',
-				// 					'transition-timing-function': ''
-				// 				});
+				$this.vendorCss({
+					'transition-property': 'none',
+					'transition-duration': '',
+					'transition-timing-function': ''
+				});
 
 				if(callback) callback.apply(self[0]);
 			}, speed);
@@ -121,7 +121,16 @@ if(window.jQuery){
 			//iterate through each property
 			for(key in properties){
 				_property = $.support.cssProperty(key);
+				
+				if(_property === false){
+					var _jProperty = {};
+					_jProperty[key] = properties[key]
 
+					return $this.jQueryAnimate(_jProperty, speed, easing.jQuery, callback);
+
+					continue;
+				}
+				
 				//if default value is auto, set it to 0 for transition to work properly
 				if($this.css(_property) === 'auto') $this.css(_property, 0);
 				
@@ -130,6 +139,8 @@ if(window.jQuery){
 				
 			}
 			_property_string = $.trim(_property_string).replace(/,+$/,'');
+			
+			if(_property_string.length == 0) return false;
 			
 			//apply css transitions
 			$this.vendorCss({
@@ -147,8 +158,10 @@ if(window.jQuery){
 
 		}else{
 			//jQuery animate fallback
-			$this.animate(properties, speed, easing.jQuery, callback);			
+			return $this.jQueryAnimate(properties, speed, easing.jQuery, callback);			
 		}
+		
+		return $this;
 	}
 }else{
 	console.error('cssAnimate must extend jQuery; please declare jQuery before loading this script.')
