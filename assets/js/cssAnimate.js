@@ -1,17 +1,18 @@
 if(window.jQuery){	
-	
-	//cssProperty: Check if a given property is supported by the browser (with or without vendor prefixes) return supported property name, or false if not supported
-	$.support.cssProperty = function(property){
-		var _prefixes = ['Moz', 'Webkit', 'O', 'ms'];
-		var _el = document.body || document.documentElement;
-
-		//check for unprefixed property
-		if(typeof _el.style[property] !== 'undefined') return property;
+	//cssSupport: Check if a given style is supported by the browser (with or without vendor prefixes) return supported style name, or false if not supported
+	$.support.cssSupport = function(el, style){
+		if(typeof el === 'undefined') el = document.body || document.documentElement;
+		if(typeof style === 'undefined') return false;
 		
-		//check for prefixed property
-		var _toPrefixProperty = property.charAt(0).toUpperCase()+property.substr(1);
+		var _prefixes = ['Moz', 'Webkit', 'O', 'ms'];
+
+		//check for unprefixed style
+		if(typeof el[0].style[style] !== 'undefined') return style;
+		
+		//check for prefixed style
+		var _toPrefixStyle = style.charAt(0).toUpperCase()+style.substr(1);
 		for(var i = 0; i < _prefixes.length; i++){
-			if(typeof _el.style[_prefixes.length+_toPrefixProperty] !== 'undefined') return _prefixes.length+_toPrefixProperty;
+			if(typeof el[0].style[_prefixes.length+_toPrefixStyle] !== 'undefined') return _prefixes.length+_toPrefixStyle;
 		}
 		
 		return false;
@@ -22,7 +23,7 @@ if(window.jQuery){
 		var $this = this;
 		
 		for(key in properties){
-			$this.css($.support.cssProperty(key), properties[key]);
+			$this.css($.support.cssSupport($this, key), properties[key]);
 		}
 		
 		return true;
@@ -102,7 +103,7 @@ if(window.jQuery){
 			}
 		}
 		
-		if($.support.cssProperty('transition')){
+		if($.support.cssSupport($this, 'transition')){
 
 			//transition complete
 			setTimeout(function(){
@@ -120,7 +121,7 @@ if(window.jQuery){
 			
 			//iterate through each property
 			for(key in properties){
-				_property = $.support.cssProperty(key);
+				_property = $.support.cssSupport($this, key);
 				
 				if(_property === false){
 					var _jProperty = {};
