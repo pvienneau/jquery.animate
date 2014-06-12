@@ -1,5 +1,6 @@
 if(window.jQuery){	
 	
+	//cssProperty: Check if a given property is supported by the browser (with or without vendor prefixes) return supported property name, or false if not supported
 	$.support.cssProperty = function(property){
 		var _prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 		var _el = document.body || document.documentElement;
@@ -17,7 +18,6 @@ if(window.jQuery){
 	}
 	
 	$.fn.jQueryAnimate = $.fn.animate;
-	
 	$.fn.animate = function(properties, speed, easing, callback){
 		
 		//associative array linking jQuery easing to css easing (for unsupported css3 easings, default to simple easing)
@@ -57,6 +57,7 @@ if(window.jQuery){
 			'easeInOutBounce': 'ease-in-out'
 		}
 		
+		//associative arra linking css easing to jQuery easings
 		var _easingCssJQuery = {
 			'ease': 'swing',
 			'linear': 'linear',
@@ -72,6 +73,7 @@ if(window.jQuery){
 		callback = callback || false;
 		var $this = $(this);
 		
+		//build easing object with css and jQuery-specific values
 		if(typeof _easingJQueryCss[easing] !== 'undefined'){
 			easing = {
 				css: _easingJQueryCss[easing],
@@ -88,11 +90,11 @@ if(window.jQuery){
 				jQuery: 'swing'
 			}
 		}
-
+		
 		if($.support.cssProperty('transition')){
 
+			//transition complete
 			setTimeout(function(){
-
 				$this.css({
 					'transition-property': 'none',  
 					'transition-duration': '',
@@ -116,16 +118,21 @@ if(window.jQuery){
 
 			var _property_string = '';
 			var _property = '';
+			
+			//iterate through each property
 			for(key in properties){
 				_property = $.support.cssProperty(key);
 
+				//if default value is auto, set it to 0 for transition to work properly
 				if($this.css(_property) === 'auto') $this.css(_property, 0);
 				
+				//build transition-property string
 				_property_string += _property+', ';
 				
 			}
 			_property_string = $.trim(_property_string).replace(/,+$/,'');
 			
+			//apply css transitions
 			$this.css({
 				'transition-property': '-webkit-transform',  
 				'transition-duration': speed + 'ms',
@@ -144,6 +151,7 @@ if(window.jQuery){
 				'-ms-transition-timing-function': easing.css
 			});
 
+			//apply new styles
 			setTimeout(function(){
 				for(key in properties){
 					$this.css(key, properties[key]);
@@ -151,6 +159,7 @@ if(window.jQuery){
 			});
 
 		}else{
+			//jQuery animate fallback
 			$this.animate(properties, speed, easing.jQuery, callback);			
 		}
 	}
