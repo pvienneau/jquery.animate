@@ -1,18 +1,18 @@
 if(window.jQuery){	
 	//cssSupport: Check if a given style is supported by the browser (with or without vendor prefixes) return supported style name, or false if not supported
-	$.support.cssSupport = function(el, style){
-		if(typeof el === 'undefined') el = document.body || document.documentElement;
+	$.support.cssSupport = function(style, el){
 		if(typeof style === 'undefined') return false;
+		if(typeof el === 'undefined') el = document.body || document.documentElement;
 		
 		var _prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 
 		//check for unprefixed style
-		if(typeof el[0].style[style] !== 'undefined') return style;
+		if(typeof el.style[style] !== 'undefined') return style;
 		
 		//check for prefixed style
 		var _toPrefixStyle = style.charAt(0).toUpperCase()+style.substr(1);
 		for(var i = 0; i < _prefixes.length; i++){
-			if(typeof el[0].style[_prefixes.length+_toPrefixStyle] !== 'undefined') return _prefixes.length+_toPrefixStyle;
+			if(typeof el.style[_prefixes.length+_toPrefixStyle] !== 'undefined') return _prefixes.length+_toPrefixStyle;
 		}
 		
 		return false;
@@ -23,7 +23,7 @@ if(window.jQuery){
 		var $this = this;
 		
 		for(key in properties){
-			$this.css($.support.cssSupport($this, key), properties[key]);
+			$this.css($.support.cssSupport(key, $this[0]), properties[key]);
 		}
 		
 		return true;
@@ -103,7 +103,7 @@ if(window.jQuery){
 			}
 		}
 		
-		if($.support.cssSupport($this, 'transition')){
+		if($.support.cssSupport('transition')){
 
 			//transition complete
 			setTimeout(function(){
@@ -113,7 +113,7 @@ if(window.jQuery){
 					'transition-timing-function': ''
 				});
 
-				if(callback) callback.apply(self[0]);
+				if(callback) callback.apply($this);
 			}, speed);
 
 			var _property_string = '';
@@ -121,7 +121,7 @@ if(window.jQuery){
 			
 			//iterate through each property
 			for(key in properties){
-				_property = $.support.cssSupport($this, key);
+				_property = $.support.cssSupport(key, $this[0]);
 				
 				if(_property === false){
 					var _jProperty = {};
