@@ -104,9 +104,13 @@ if(window.jQuery){
 		}
 		
 		if($.support.cssSupport('transition')){
+			var animateTimestamp = new Date().getTime();
+			$this.data('animateTimestamp', animateTimestamp);
 
 			//transition complete
 			setTimeout(function(){
+				if(animateTimestamp !== $this.data('animateTimestamp')) return false;
+				
 				$this.vendorCss({
 					'transition-property': 'none',
 					'transition-duration': '',
