@@ -127,7 +127,7 @@ if(window.jQuery){
 					var _jProperty = {};
 					_jProperty[key] = properties[key]
 
-					return $this.jQueryAnimate(_jProperty, speed, easing.jQuery, callback);
+					return $this.jQueryAnimate(_jProperty, speed, easing.jQuery);
 
 					continue;
 				}
