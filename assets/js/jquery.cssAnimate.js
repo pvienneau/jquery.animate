@@ -6,13 +6,18 @@ if(window.jQuery){
 		
 		var _prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 
+		style = style.replace( /-([a-z])/ig, function( all, letter ) {
+			return letter.toUpperCase();
+		});
+
 		//check for unprefixed style
 		if(typeof el.style[style] !== 'undefined') return style;
 		
 		//check for prefixed style
 		var _toPrefixStyle = style.charAt(0).toUpperCase()+style.substr(1);
+
 		for(var i = 0; i < _prefixes.length; i++){
-			if(typeof el.style[_prefixes.length+_toPrefixStyle] !== 'undefined') return _prefixes.length+_toPrefixStyle;
+			if(typeof el.style[_prefixes[i]+_toPrefixStyle] !== 'undefined') return _prefixes[i]+_toPrefixStyle;
 		}
 		
 		return false;
@@ -25,7 +30,7 @@ if(window.jQuery){
 		for(key in properties){
 			$this.css($.support.cssSupport(key, $this[0]), properties[key]);
 		}
-		
+
 		return true;
 	}
 	
