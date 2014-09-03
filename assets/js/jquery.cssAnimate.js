@@ -6,18 +6,13 @@ if(window.jQuery){
 		
 		var _prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 
-		style = style.replace( /-([a-z])/ig, function( all, letter ) {
-			return letter.toUpperCase();
-		});
-
 		//check for unprefixed style
 		if(typeof el.style[style] !== 'undefined') return style;
 		
 		//check for prefixed style
 		var _toPrefixStyle = style.charAt(0).toUpperCase()+style.substr(1);
-
 		for(var i = 0; i < _prefixes.length; i++){
-			if(typeof el.style[_prefixes[i]+_toPrefixStyle] !== 'undefined') return _prefixes[i]+_toPrefixStyle;
+			if(typeof el.style[_prefixes.length+_toPrefixStyle] !== 'undefined') return _prefixes.length+_toPrefixStyle;
 		}
 		
 		return false;
@@ -30,12 +25,28 @@ if(window.jQuery){
 		for(key in properties){
 			$this.css($.support.cssSupport(key, $this[0]), properties[key]);
 		}
-
+		
 		return true;
 	}
 	
 	$.fn.jQueryAnimate = $.fn.animate;
-	$.fn.animate = function(properties, speed, easing, callback){
+	$.fn.animate = function(){
+		var properties, speed, easing, callback;
+		
+		/*reorder parameters of function*/
+		for(var aa = arguments.length -1; aa >= 0; aa--){
+			switch(typeof arguments[aa]){
+				case 'function':
+					callback = arguments[aa];
+					break;
+				case 'number':
+					speed = arguments[aa];
+				case 'object':
+					properties = arguments[aa];
+				case 'string':
+					easing = arguments[aa];
+			}
+		}
 		
 		//associative array linking jQuery easing to css easing (for unsupported css3 easings, default to simple easing)
 		//from: http://easings.net/
@@ -109,19 +120,15 @@ if(window.jQuery){
 		}
 		
 		if($.support.cssSupport('transition')){
-			var animateTimestamp = new Date().getTime();
-			$this.data('animateTimestamp', animateTimestamp);
 
 			//transition complete
 			setTimeout(function(){
-				if(animateTimestamp !== $this.data('animateTimestamp')) return false;
-				
 				$this.vendorCss({
 					'transition-property': 'none',
 					'transition-duration': '',
 					'transition-timing-function': ''
 				});
-
+				
 				if(callback) callback.apply($this);
 			}, speed);
 
@@ -136,7 +143,7 @@ if(window.jQuery){
 					var _jProperty = {};
 					_jProperty[key] = properties[key]
 
-					return $this.jQueryAnimate(_jProperty, speed, easing.jQuery);
+					return $this.jQueryAnimate(_jProperty, speed, easing.jQuery, callback);
 
 					continue;
 				}
