@@ -121,17 +121,6 @@ if(window.jQuery){
 		
 		if($.support.cssSupport('transition')){
 
-			//transition complete
-			setTimeout(function(){
-				$this.vendorCss({
-					'transition-property': 'none',
-					'transition-duration': '',
-					'transition-timing-function': ''
-				});
-				
-				if(callback) callback.apply($this);
-			}, speed);
-
 			var _property_string = '';
 			var _property = '';
 			
@@ -172,6 +161,24 @@ if(window.jQuery){
 					$this.css(key, properties[key]);
 				}
 			});
+			
+			//wait for complete callback
+			var _timestamp = new Date().getTime();
+			$this.data('cssAnimateTimestamp', _timestamp);
+			setTimeout(function(){
+				if($this.data('cssAnimateTimestamp') === _timestamp){
+					$this.vendorCss({
+						'transition-property': 'none',
+						'transition-duration': '',
+						'transition-timing-function': ''
+					});
+					
+					$($this, 'cssAnimateTimestamp');
+				}
+				
+				
+				if(callback) callback.apply($this);
+			}, speed);
 
 		}else{
 			//jQuery animate fallback
