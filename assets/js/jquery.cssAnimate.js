@@ -174,10 +174,10 @@ if(window.jQuery){
 					});
 					
 					$($this, 'cssAnimateTimestamp');
+				
+					
+					if(callback) callback.apply($this);
 				}
-				
-				
-				if(callback) callback.apply($this);
 			}, speed);
 
 		}else{
