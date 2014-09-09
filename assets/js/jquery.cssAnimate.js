@@ -3,7 +3,7 @@ if(window.jQuery){
 	$.support.cssSupport = function(style, el){
 		if(typeof style === 'undefined') return false;
 		if(typeof el === 'undefined') el = document.body || document.documentElement;
-		
+
 		var _prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 
 		//check for unprefixed style
@@ -12,7 +12,9 @@ if(window.jQuery){
 		//check for prefixed style
 		var _toPrefixStyle = style.charAt(0).toUpperCase()+style.substr(1);
 		for(var i = 0; i < _prefixes.length; i++){
-			if(typeof el.style[_prefixes.length+_toPrefixStyle] !== 'undefined') return _prefixes.length+_toPrefixStyle;
+			var _vendorStyle = _prefixes[i]+$.camelCase('-'+_toPrefixStyle);
+
+			if(typeof el.style[_vendorStyle] !== 'undefined') return _vendorStyle;
 		}
 		
 		return false;
@@ -31,6 +33,7 @@ if(window.jQuery){
 	
 	$.fn.jQueryAnimate = $.fn.animate;
 	$.fn.animate = function(){
+		
 		var properties, speed, easing, callback;
 		
 		/*reorder parameters of function*/
@@ -164,6 +167,7 @@ if(window.jQuery){
 			
 			//wait for complete callback
 			var _timestamp = new Date().getTime();
+			
 			$this.data('cssAnimateTimestamp', _timestamp);
 			setTimeout(function(){
 				if($this.data('cssAnimateTimestamp') === _timestamp){
@@ -175,7 +179,6 @@ if(window.jQuery){
 					
 					$($this, 'cssAnimateTimestamp');
 				
-					
 					if(callback) callback.apply($this);
 				}
 			}, speed);
