@@ -7,4 +7,4 @@ Meant to extend jQuery's animate function by transfering animations to CSS3 tran
 
 ####Current Compatibility
 * Developed, tested and used in **Chrome 37.0.2062.94**.
-* tested in **Firefox 32.0**.
+* Tested in **Firefox 32.0**.
